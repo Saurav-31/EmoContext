@@ -184,7 +184,7 @@ def getEmbeddingMatrix(wordIndex):
     """
     embeddingsIndex = {}
     # Load the embedding vectors from ther GloVe file
-    with io.open(os.path.join(gloveDir, 'glove.6B.100d.txt'), encoding="utf8") as f:
+    with io.open(os.path.join(gloveDir, 'glove.6B.300d.txt'), encoding="utf8") as f:
         for line in f:
             values = line.split()
             word = values[0]
@@ -292,7 +292,7 @@ def main():
                "microRecall" : [],
                "microF1" : []}
     
-    print("Starting k-fold cross validation...")
+   '''print("Starting k-fold cross validation...")
     for k in range(NUM_FOLDS):
         print('-'*40)
         print("Fold %d/%d" % (k+1, NUM_FOLDS))
@@ -324,7 +324,7 @@ def main():
     print("Average Cross-Validation Micro F1 : %.4f" % (sum(metrics["microF1"])/len(metrics["microF1"])))
     
     print("\n======================================")
-    
+    '''
     print("Retraining model on entire data to create solution file")
     model = buildModel(embeddingMatrix)
     model.fit(data, labels, epochs=NUM_EPOCHS, batch_size=BATCH_SIZE)
