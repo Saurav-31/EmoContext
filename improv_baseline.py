@@ -61,7 +61,7 @@ def main():
     DROPOUT = config["dropout"]
     LEARNING_RATE = config["learning_rate"]
     NUM_EPOCHS = config["num_epochs"]
-    threshold = 5
+    threshold = 3
 
     print("Processing training data...")
     trainIndices, trainTexts, labels = preprocessData(trainDataPath, mode="train")

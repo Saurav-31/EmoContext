@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 from nltk.tokenize.casual import TweetTokenizer
 from keras.preprocessing.sequence import pad_sequences
+from keras.utils import to_categorical
+
 
 label2emotion = {0:"others", 1:"happy", 2: "sad", 3:"angry"}
 emotion2label = {"others":0, "happy":1, "sad":2, "angry":3}
@@ -196,7 +198,7 @@ def preprocess_fn(trainTexts):
     word_counts = count_words(data)
                 
     print("Size of Vocabulary:", len(word_counts))
-    print(word_counts)
+    #print(word_counts)
     return data, word_counts
 
 def getEmbeddingMatrix(wordIndex, threshold, gloveDir, EMBEDDING_DIM):
@@ -284,7 +286,7 @@ def final_fn(vocab_to_int, word_counts, data):
     word_count = 0
     unk_count = 0
 
-    int_summaries, word_count, unk_count = convert_to_ints(data, word_count, unk_count, vocab_to_int)
+    sentence_vectors, word_count, unk_count = convert_to_ints(data, word_count, unk_count, vocab_to_int)
 
     unk_percent = round(unk_count/word_count,4)*100
 
@@ -292,9 +294,9 @@ def final_fn(vocab_to_int, word_counts, data):
     print("Total number of UNKs in headlines:", unk_count)
     print("Percent of words that are UNK: {}%".format(unk_percent))
 
-    #print(int_summaries)
+    #print(sentence_vectors)
 
-    return int_summaries
+    return sentence_vectors
 
 
 def writeNormalisedData(dataFilePath, texts):
@@ -334,6 +336,7 @@ def getMetrics(predictions, ground):
         microF1 : Harmonic mean of microPrecision and microRecall. Higher value implies better classification  
     """
     # [0.1, 0.3 , 0.2, 0.1] -> [0, 1, 0, 0]
+    NUM_CLASSES = 4
     discretePredictions = to_categorical(predictions.argmax(axis=1))
     
     truePositives = np.sum(discretePredictions*ground, axis=0)
